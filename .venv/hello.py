@@ -2,7 +2,7 @@ from flask import Flask
 from flask_login import LoginManager
 from flask import session
 from flask import redirect
-
+from flask import render_template
 
 from markupsafe import escape
 
@@ -27,7 +27,7 @@ def hello_world():
 @app.route("/login", methods = ['GET', 'POST'])
 def login():    
     login_manager.init_app(app)
-    if method == 'POST':
+    if request.method == 'POST':
         session['username'] = request.form['username']
         return redirect(url_for('welcome'))
 
@@ -46,3 +46,32 @@ def welcome():
         welcomeText = welcomeText + "<div> <p> You are logged in as " + session['username'] + "</p> </div>"
     else:
         return 'You are not logged in\n' + '<div> <a href="/login"> Login </a> </div>'
+    
+@app.route("/me")
+def me_api():
+    user = get_current_user()
+    return {
+        "username": user.username,
+        "theme": user.theme,
+        "image": url_for("user_image", filename=user.image),
+    }
+
+@app.route("/users")
+def users_api():
+    users = get_all_users()
+    return [user.to_json() for user in users]
+
+
+#@app.errorhandler(404)
+#def not_found(error):
+#    return render_template('error.html'), 404
+
+@app.errorhandler(404)
+def not_found(error):
+    resp = make_response(render_template('error.html'), 404)
+    resp.headers['X-Something'] = 'A value'
+    return resp
+
+
+def cositasError(error):
+    resp = make_response(render_template('test.html'), 501)
