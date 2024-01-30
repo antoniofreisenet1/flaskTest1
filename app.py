@@ -20,16 +20,15 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 
-
 from models import User
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.get(user_id)
+    return User.query.get(user_id)
 
 @app.route("/")
 def hello_world():
-    return "<p>Gad mf damn </p>"
+    return render_template('index.html')
 
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
@@ -42,18 +41,14 @@ def login():
           return redirect(url_for('welcome'))
       else:
           return "Invalid username/password combination"
-   return render_template('index.html')
+   return render_template('login.html')
 #The application also contains a logout () view function that pops up the 'username' session variable.Therefore, the ' /' URL displays the start page again.
 
 
-
+#Test route for name parameter
 @app.route("/<name>")
 def hello(name):
     return f"Hello, {escape(name)}!"
-
-@app.route("/main")
-def gadamn():
-    return "<p>gadamn</p>"
 
 @app.route("/welcome")
 def welcome():
@@ -62,11 +57,20 @@ def welcome():
         welcomeText = welcomeText + "<div> <p> You are logged in as " + session['username'] + "</p> </div>"
         return welcomeText
     else:
-        return 'You are not logged in\n' + '<div> <a href="/login"> Login </a> </div>'
+        #This method is to test compatibility of the template engine with the flask app.
+        return '''
+                <h1>You are not logged in</h1>
+                <div>
+                    <a href = "{{url_for('login')}}"> Login </a>
+                </div>'''
     
 @app.route("/me")
 def me_api():
     user = get_current_user()
+    if(user == None):
+        return {
+            "error": "Not logged in"
+        }
     return {
         "username": user.username,
         "theme": user.theme,
@@ -83,7 +87,7 @@ def users_api():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('index'))
+    return redirect(url_for('welcome'))
 
 
 @app.errorhandler(404)

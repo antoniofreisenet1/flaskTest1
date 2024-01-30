@@ -5,11 +5,11 @@
     <meta charset="utf-8">
     <title>HTML5 stuff
     </title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'styles.css')}}">
 
 </head>
 
 <body>
 
     <div> Error!!! </div>
-    <a href="http://127.0.0.1:5000" class="button">Go to Index</a>
+    <a href="{{url_for('static', filename = 'welcome')}}" class="button">Go to the Welcome page</a>
