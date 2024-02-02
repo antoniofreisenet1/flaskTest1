@@ -77,6 +77,13 @@ def me_api():
         "image": url_for("user_image", filename=user.image),
     }
 
+@app.route("/user_image") #TODO: Revise the route to properly implement the user_image function
+def user_image():
+    user = get_current_user()
+    if user is None:
+        return redirect(url_for("static", filename="anonymous.jpg"))
+    return redirect(url_for("static", filename="user.html"))
+
 @app.route("/users")
 def users_api():
     users = get_all_users()
