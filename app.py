@@ -84,9 +84,9 @@ def user_image():
         return redirect(url_for("static", filename="anonymous.jpg"))
     return redirect(url_for("static", filename="user.html"))
 
-@app.route("/video")
+@app.route("/video") #TODO: Make the video route work remotely, without the need of the file being in the same directory as the app
 def video():
-    video = "https://www.youtube.com/watch?v=GJDNkVDGM_s"
+    video = "Agile model.mp4"
     return send_file(video, mimetype="video/mp4")
     
 
