@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, session, url_for, redirect, render_template, make_response
+from flask import Flask, request, session, url_for, redirect, render_template, make_response, send_file
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user
 from flask_sqlalchemy import SQLAlchemy
 
@@ -83,6 +83,12 @@ def user_image():
     if user is None:
         return redirect(url_for("static", filename="anonymous.jpg"))
     return redirect(url_for("static", filename="user.html"))
+
+@app.route("/video")
+def video():
+    video = "https://www.youtube.com/watch?v=GJDNkVDGM_s"
+    return send_file(video, mimetype="video/mp4")
+    
 
 @app.route("/users")
 def users_api():
